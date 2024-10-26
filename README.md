@@ -1,50 +1,45 @@
-# React + TypeScript + Vite
+# Login-Fullstack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação fullstack com autenticação de usuários utilizando **React**, **TypeScript** e **Vite** no frontend.
 
-Currently, two official plugins are available:
+## 🧭 Sumário
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [🧰 Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [🚀 Como Rodar o Projeto](#-como-rodar-o-projeto)
+- [🔍 Estrutura do Projeto](#-estrutura-do-projeto)
+- [🧹 Configuração de ESLint Avançada](#-configuração-de-eslint-avançada)
+- [📦 Dependências Recomendadas](#-dependências-recomendadas)
+- [👥 Contribuindo](#-contribuindo)
+- [🧑‍💻 Autor](#-autor)
+- [📜 Licença](#-licença)
+- [📫 Contato](#-contato)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🧰 Tecnologias Utilizadas
 
-- Configure the top-level `parserOptions` property like this:
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Router](https://reactrouter.com/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🚀 Como Rodar o Projeto
+1. **Você precisa ter instalado o Node.JS e Git**
+
+2. **Clone o repositório:**
+
+```bash
+git clone https://github.com/FelipeDylanMar/Login-Fullstack.git
+cd Login-Fullstack
 ```
+3. **Instale as dependencias do projeto**
+```bash
+npm i
+**ignore the errors of npm**
+npm run dev
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
