@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const bcrypt = require('bcrypt'); // Importa o bcrypt
 
 dotenv.config(); // Carrega variáveis do .env
 
@@ -36,7 +37,8 @@ app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const newUser = new User({ email, password }); // Armazena a senha em texto simples
+    const hashedPassword = await bcrypt.hash(password, 10); // Hashea a senha com um salt de 10
+    const newUser = new User({ email, password: hashedPassword }); // Armazena a senha hasheada
     await newUser.save();
     res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
   } catch (error) {
@@ -56,7 +58,8 @@ app.post('/login', async (req, res) => {
     }
 
     // Verifica se a senha está correta
-    if (user.password !== password) {
+    const isPasswordValid = await bcrypt.compare(password, user.password); // Compara a senha
+    if (!isPasswordValid) {
       return res.status(401).json({ message: 'Credenciais inválidas.' });
     }
 
