@@ -1,13 +1,16 @@
 import { HomeIcon, UserIcon, CogIcon, QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline"; // Ícone atualizado
 import { useState } from "react";
+import { useAuth } from "../../hooks/AuthContext";
 
-interface MenuHamburguerProps {
-  handleLogout: () => void;
-}
-
-const MenuHamburguer: React.FC<MenuHamburguerProps> = ({ handleLogout }) => {
+const MenuHamburguer: React.FC = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   const toggleMenu = () => {
     setMenuOpen((prevState) => !prevState);
