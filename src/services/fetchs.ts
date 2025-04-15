@@ -1,6 +1,7 @@
 interface SignUpData {
     email: string;
     password: string;
+    name: string;
   }
   
   export async function signUp(userData: SignUpData): Promise<string> {
