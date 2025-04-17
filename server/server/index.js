@@ -108,6 +108,16 @@ const authMiddleware = (req, res, next) => {
   });
 };
 
+app.get("/users", authMiddleware, async (req, res) => {
+  try {
+    const users = await User.find({}, "email _id");
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Erro ao buscar usuários:", error);
+    res.status(500).json({ message: "Erro ao buscar usuários." });
+  }
+});
+
 app.get("/home", authMiddleware, (req, res) => {
   res.json({ message: "Bem-vindo à página inicial!" });
 });
