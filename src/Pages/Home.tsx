@@ -16,27 +16,30 @@ const Home = () => {
           <div className="flex justify-between items-center gap-2">
             <button
               onClick={() => navigate("/home")}
-              className="flex items-center gap-2 group-hover:block w-9 group-hover:text-black font-medium transition"
+              className="flex items-center gap-2 group-hover:text-black font-medium transition"
+
             >
-              <HomeIcon />
+              <HomeIcon className="w-5 h-5"/>
               <span className="hidden group-hover:inline">Dashboard</span>
             </button>
           </div>
           <div className="flex justify-between items-center gap-2">
             <button
               onClick={() => navigate("/")}
-              className="flex items-center gap-2 group-hover:block w-9 group-hover:text-black font-medium transition"
+              className="flex items-center gap-2 group-hover:text-black font-medium transition"
+
             >
-              <UserIcon className="text-xl" />
+              <UserIcon className="w-5 h-5" />
               <span className="hidden group-hover:inline">Users</span>
             </button>
           </div>
           <div className="flex justify-between items-center gap-2">
             <button
               onClick={() => navigate("/")}
-              className="flex items-center gap-2 group-hover:block w-9 group-hover:text-black font-medium transition"
+              className="flex items-center gap-2 group-hover:text-black font-medium transition"
+
             >
-              <CogIcon className="text-xl" />
+              <CogIcon className="w-5 h-5" />
               <span className="hidden group-hover:inline">Settings</span>
             </button>
           </div>
