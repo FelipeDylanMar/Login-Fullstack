@@ -32,15 +32,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("user", email);
       setUser(email);
   
-      navigate("/home");
+      navigate("/home/dashboard");
     } catch (error) {
       console.error("Erro no login:", error);
       alert("Erro ao fazer login.");
     }
   };
   
-  
-
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
