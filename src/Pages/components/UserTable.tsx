@@ -4,9 +4,11 @@ import { User } from '../../types/types';
 
 interface UserTableProps {
   users: User[];
+  onEdit: (user: User) => void;
+  onDelete: (user: User) => void;
 }
 
-export default function UserTable({ users }: UserTableProps) {
+export default function UserTable({ users, onEdit, onDelete }: UserTableProps) {
   const columns = useMemo<ColumnDef<User>[]>(() => [
     { accessorKey: 'name', header: 'Nome' },
     { accessorKey: 'email', header: 'Email' },
@@ -15,18 +17,27 @@ export default function UserTable({ users }: UserTableProps) {
     {
       id: 'actions',
       header: 'Ações',
-      cell: ({ row }: any) => (
-        <div className="flex space-x-2">
-          <button className="bg-yellow-500 text-white p-1 rounded-lg hover:bg-yellow-600">
-            Edit
-          </button>
-          <button className="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600">
-            Inactivate
-          </button>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const user = row.original;
+        return (
+          <div className="flex space-x-2">
+            <button
+              className="bg-yellow-500 text-white p-1 rounded-lg hover:bg-yellow-600"
+              onClick={() => onEdit(user)}
+            >
+              Edit
+            </button>
+            <button
+              className="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600"
+              onClick={() => onDelete(user)}
+            >
+              Delete
+            </button>
+          </div>
+        );
+      },
     },
-  ], []);
+  ], [onEdit, onDelete]);
 
   const table = useReactTable({
     data: users,

@@ -13,7 +13,6 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-// Conexão com o MongoDB Atlas
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Conectado ao MongoDB"))
@@ -26,12 +25,10 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-// Rota de exemplo
 app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
-// Rota de SignUp (Cadastro de Usuário)
 app.post("/signup", async (req, res) => {
   const { email, password } = req.body;
 
@@ -55,7 +52,6 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// Rota de Login
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -125,3 +121,46 @@ app.get("/home", authMiddleware, (req, res) => {
 app.listen(PORT, () =>
   console.log(`Servidor rodando em http://localhost:${PORT}`)
 );
+
+app.put("/users/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const { email, password } = req.body;
+
+  try {
+    const updateData = {};
+
+    if (email) updateData.email = email;
+    if (password) updateData.password = await bcrypt.hash(password, 10);
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    res.status(200).json({ message: "Usuário atualizado com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao atualizar usuário:", error);
+    res.status(500).json({ message: "Erro ao atualizar usuário." });
+  }
+});
+
+app.delete("/users/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    res.status(200).json({ message: "Usuário deletado com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao deletar usuário:", error);
+    res.status(500).json({ message: "Erro ao deletar usuário." });
+  }
+});
+

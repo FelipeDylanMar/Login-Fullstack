@@ -33,11 +33,18 @@ const Users = () => {
     fetchUsers();
   }, []);
 
-  const filteredUsers = users.filter((user) =>
-    (user.name || "")
-      .toLowerCase()
-      .includes(search.toLowerCase()) ||
-    user.email.toLowerCase().includes(search.toLowerCase())
+  const handleEdit = (user: User) => {
+    console.log('Editar usuário:', user);
+  };
+
+  const handleDelete = (user: User) => {
+    console.log('Deletar usuário:', user);
+  };
+
+  const filteredUsers = users.filter(
+    (user) =>
+      (user.name || "").toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -62,7 +69,11 @@ const Users = () => {
       {loading ? (
         <div className="text-center">Carregando...</div>
       ) : (
-        <UserTable users={filteredUsers} />
+        <UserTable
+          users={filteredUsers}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       )}
     </div>
   );

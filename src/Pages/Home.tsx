@@ -71,7 +71,11 @@ const Home = () => {
             ) : error ? (
               <p className="p-6 text-center text-red-500">Erro: {error}</p>
             ) : (
-              <UserTable users={users} />
+              <UserTable users={users} onEdit={function (user: User): void {
+                    throw new Error("Function not implemented.");
+                  } } onDelete={function (user: User): void {
+                    throw new Error("Function not implemented.");
+                  } } />
             )}
           </div>
         </div>
