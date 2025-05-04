@@ -6,6 +6,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -13,6 +14,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<string | null>(localStorage.getItem("user"));
   const navigate = useNavigate();
+
+  const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+    const token = localStorage.getItem("token");
+
+    const headers = {
+      ...(options.headers || {}),
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await fetch(url, { ...options, headers });
+
+    // Logout automático se o token for inválido
+    if (response.status === 401 || response.status === 403) {
+      logout();
+      throw new Error("Sessão expirada. Faça login novamente.");
+    }
+
+    return response;
+  };
 
   const login = async (email: string, password: string) => {
     try {
@@ -23,22 +44,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       if (!response.ok) throw new Error("Credenciais inválidas.");
-  
+
       const { token } = await response.json();
-  
+
       localStorage.setItem("token", token);
       localStorage.setItem("user", email);
       setUser(email);
-  
+
       navigate("/home/dashboard");
     } catch (error) {
       console.error("Erro no login:", error);
       alert("Erro ao fazer login.");
     }
   };
-  
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -49,7 +70,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = !!localStorage.getItem("token");
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isAuthenticated, fetchWithAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );

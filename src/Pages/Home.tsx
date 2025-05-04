@@ -2,40 +2,31 @@ import { useState, useEffect } from "react";
 import MenuHamburguer from "./components/MenuHamburguer";
 import UserTable from "./components/UserTable";
 import { User } from "../types/types";
-
-const token = localStorage.getItem("token");
+import { useAuth } from "../hooks/AuthContext";
 
 const Home = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { fetchWithAuth } = useAuth();
 
   useEffect(() => {
+    console.log("Fetching users...");
     const fetchUsers = async () => {
       try {
-        const resp = await fetch("http://localhost:5000/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!resp.ok) throw new Error("Falha ao buscar usuários");
+        const resp = await fetchWithAuth("http://localhost:5000/users");
+        if (!resp.ok) throw new Error("Erro ao buscar usuários");
         const data = await resp.json();
-        const formatted: User[] = data.map((u: any) => ({
-          id: u._id,
-          email: u.email,
-          name: u.name,
-          role: u.role,
-          status: u.status,
-        }));
-        setUsers(formatted);
-      } catch (err) {
-        setError((err as Error).message);
+        setUsers(data);
+      } catch (error) {
+        setError((error as Error).message);
       } finally {
         setLoadingUsers(false);
       }
     };
+  
     fetchUsers();
-  }, [token]);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -71,9 +62,9 @@ const Home = () => {
             ) : error ? (
               <p className="p-6 text-center text-red-500">Erro: {error}</p>
             ) : (
-              <UserTable users={users} onEdit={function (user: User): void {
+              <UserTable users={users} onEdit={function (): void {
                     throw new Error("Function not implemented.");
-                  } } onDelete={function (user: User): void {
+                  } } onDelete={function (): void {
                     throw new Error("Function not implemented.");
                   } } />
             )}
