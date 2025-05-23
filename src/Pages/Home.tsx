@@ -11,10 +11,9 @@ const Home = () => {
   const { fetchWithAuth } = useAuth();
 
   useEffect(() => {
-    console.log("Fetching users...");
     const fetchUsers = async () => {
       try {
-        const resp = await fetchWithAuth("http://localhost:5000/users");
+        const resp = await fetchWithAuth("http://localhost:5000/api/users");
         if (!resp.ok) throw new Error("Erro ao buscar usuários");
         const data = await resp.json();
         setUsers(data);

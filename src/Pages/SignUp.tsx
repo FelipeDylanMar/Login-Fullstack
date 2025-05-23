@@ -26,7 +26,7 @@ const SignUp = () => {
     try {
       const message = await signUp({ email, password, name });
       console.log(message);
-      navigate("/login");
+      navigate("/home/dashboard");
     } catch (error) {
       console.error("Erro ao cadastrar:", error);
     }
@@ -134,7 +134,7 @@ const SignUp = () => {
             <p className="inline">Already have an account? </p>
             <button
               type="button"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/home/dashboard")}
               className="text-blue-600 hover:underline cursor-pointer"
             >
               Log in

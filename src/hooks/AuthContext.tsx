@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const response = await fetch(url, { ...options, headers });
 
-    // Logout automático se o token for inválido
     if (response.status === 401 || response.status === 403) {
       logout();
       throw new Error("Sessão expirada. Faça login novamente.");
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

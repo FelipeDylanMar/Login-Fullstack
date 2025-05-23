@@ -1,8 +1,10 @@
 import { loginData, SignUpData, UserUpdateData } from "../types/types";
 
+const BASE_URL = "http://localhost:5000/api";
+
 export async function signUp(userData: SignUpData): Promise<string> {
   try {
-    const response = await fetch("http://localhost:5000/signup", {
+    const response = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,9 +24,12 @@ export async function signUp(userData: SignUpData): Promise<string> {
   }
 }
 
-export async function login(userData: loginData): Promise<string> {
+export async function login(userData: loginData): Promise<{
+  token: string;
+  user: any;
+}> {
   try {
-    const response = await fetch("http://localhost:5000/signup", {
+    const response = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,11 +38,14 @@ export async function login(userData: loginData): Promise<string> {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao cadastrar o usuário");
+      throw new Error("Erro ao fazer login");
     }
 
     const data = await response.json();
-    return data.message;
+    return {
+      token: data.token,
+      user: data.user,
+    };
   } catch (error) {
     console.error("Erro na requisição:", error);
     throw error;
@@ -49,7 +57,7 @@ export async function editUser(
   token: string
 ): Promise<string> {
   try {
-    const response = await fetch(`http://localhost:5000/users/${userData.id}`, {
+    const response = await fetch(`${BASE_URL}/users/${userData.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -72,7 +80,7 @@ export async function editUser(
 
 export async function deleteUser(id: string, token: string): Promise<string> {
   try {
-    const response = await fetch(`http://localhost:5000/users/${id}`, {
+    const response = await fetch(`${BASE_URL}/users/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
