@@ -9,7 +9,7 @@ const Home = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { fetchWithAuth } = useAuth();
+  const { fetchWithAuth, user } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -43,7 +43,7 @@ const Home = () => {
 
         <main className="p-8 flex-1 overflow-y-auto bg-white">
           <h1 className="text-3xl font-bold mb-4 text-gray-700">
-            Welcome back Dylan!
+            Welcome back {user?.name}!
           </h1>
           <p className="mb-8 text-gray-700">
             Manage your users and settings below.

@@ -1,8 +1,16 @@
 import { useState, createContext, useContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
+interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  status: string;
+}
+
 interface AuthContextType {
-  user: string | null;
+  user: AuthUser | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -12,7 +20,24 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<string | null>(localStorage.getItem("user"));
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    const storedUser = localStorage.getItem("user");
+
+    try {
+      if (!storedUser) return null;
+
+      const parsed = JSON.parse(storedUser);
+
+      if (parsed && parsed.email && parsed.name) {
+        return parsed;
+      }
+
+      return { email: storedUser, name: "Usuário" };
+    } catch {
+      return { email: storedUser, name: "Usuário" };
+    }
+  });
+
   const navigate = useNavigate();
 
   const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
@@ -46,11 +71,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (!response.ok) throw new Error("Credenciais inválidas.");
 
-      const { token } = await response.json();
+      const { token, user: userInfo } = await response.json();
 
       localStorage.setItem("token", token);
-      localStorage.setItem("user", email);
-      setUser(email);
+      localStorage.setItem("user", JSON.stringify(userInfo));
+      setUser(userInfo);
 
       navigate("/home/dashboard");
     } catch (error) {
